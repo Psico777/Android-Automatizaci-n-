@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Gesture Recorder</string>
+    <string name="accessibility_service_description">Este servicio permite grabar y reproducir gestos en la pantalla, así como copiar y pegar texto entre aplicaciones.</string>
+    <string name="enable_service">Habilitar Servicio</string>
+    <string name="service_enabled">Servicio Habilitado</string>
+    <string name="service_disabled">Servicio Deshabilitado</string>
+    <string name="start_recording">Iniciar Grabación</string>
+    <string name="stop_recording">Detener Grabación</string>
+    <string name="replay_gestures">Reproducir Gestos</string>
+    <string name="clear_gestures">Limpiar Gestos</string>
+    <string name="overlay_permission_required">Se requiere permiso de overlay</string>
+    <string name="recording">Grabando...</string>
+    <string name="not_recording">No grabando</string>
+    <string name="gestures_recorded">Gestos grabados: %d</string>
+</resources>
