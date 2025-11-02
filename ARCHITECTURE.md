@@ -1,24 +1,25 @@
-# App Architecture and Flow Diagrams
 
-## Component Architecture
+# Arquitectura de la aplicación y diagramas de flujo
+
+## Arquitectura de componentes
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                        User Interface                        │
+│                        Interfaz de Usuario                  │
 ├─────────────────────────────────────────────────────────────┤
 │                                                               │
 │  ┌─────────────────┐          ┌─────────────────────────┐  │
-│  │  MainActivity   │          │   Floating Overlay      │  │
-│  │                 │          │   Controls              │  │
-│  │  - Permission   │          │                         │  │
-│  │    Management   │          │  ┌──────────────────┐  │  │
-│  │  - Status       │          │  │ Record Button    │  │  │
-│  │    Display      │          │  ├──────────────────┤  │  │
-│  │                 │          │  │ Play Button      │  │  │
+│  │  MainActivity   │          │   Overlay flotante      │  │
+│  │                 │          │   (Controles)           │  │
+│  │  - Gestión de   │          │                         │  │
+│  │    permisos     │          │  ┌──────────────────┐  │  │
+│  │  - Indicador    │          │  │ Botón Grabar     │  │  │
+│  │    de estado    │          │  ├──────────────────┤  │  │
+│  │                 │          │  │ Botón Reproducir │  │  │
 │  └─────────────────┘          │  ├──────────────────┤  │  │
-│                                │  │ Clear Button     │  │  │
+│                                │  │ Botón Limpiar    │  │  │
 │                                │  ├──────────────────┤  │  │
-│                                │  │ Status Text      │  │  │
+│                                │  │ Texto de estado  │  │  │
 │                                │  └──────────────────┘  │  │
 │                                └─────────────────────────┘  │
 └─────────────────────────────────────────────────────────────┘
@@ -30,24 +31,24 @@
 ├─────────────────────────────────────────────────────────────┤
 │                                                               │
 │  ┌──────────────────┐  ┌──────────────────┐  ┌───────────┐ │
-│  │ Gesture          │  │ Gesture          │  │ Text      │ │
-│  │ Recording        │  │ Playback         │  │ Copy/Paste│ │
+│  │ Grabación de     │  │ Reproducción de  │  │ Copiar/    │ │
+│  │ gestos           │  │ gestos           │  │ pegar texto│ │
 │  │                  │  │                  │  │           │ │
-│  │ - Capture touch  │  │ - Build paths    │  │ - Monitor │ │
-│  │   coordinates    │  │ - Dispatch       │  │   text    │ │
-│  │ - Store in list  │  │   gestures       │  │   select  │ │
-│  │ - Track timing   │  │ - Replay timing  │  │ - Inject  │ │
+│  │ - Captura de     │  │ - Construcción   │  │ - Monit.  │ │
+│  │   coordenadas    │  │   de paths       │  │   selección│ │
+│  │ - Almacena lista │  │ - Dispatch de    │  │ - Inyección│ │
+│  │ - Registro timing│  │   gestos         │  │   en campos│ │
 │  └──────────────────┘  └──────────────────┘  └───────────┘ │
 │                                                               │
 └─────────────────────────────────────────────────────────────┘
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                        Data Layer                            │
+│                        Capa de datos                         │
 ├─────────────────────────────────────────────────────────────┤
 │                                                               │
 │  ┌──────────────────────────────────────────────────────┐  │
-│  │  GestureData (List)                                  │  │
+│  │  GestureData (Lista)                                 │  │
 │  │  ┌────────────────────────────────────────────────┐ │  │
 │  │  │ GestureData(x, y, action, timestamp)           │ │  │
 │  │  │ GestureData(x, y, action, timestamp)           │ │  │
@@ -60,70 +61,70 @@
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                     Android System APIs                      │
+│                     APIs del sistema Android                 │
 ├─────────────────────────────────────────────────────────────┤
 │                                                               │
 │  • WindowManager (Overlay)                                   │
 │  • AccessibilityService API                                  │
 │  • GestureDescription.dispatchGesture()                     │
 │  • ClipboardManager                                          │
-│  • AccessibilityNodeInfo (Text injection)                    │
+│  • AccessibilityNodeInfo (Inyección de texto)               │
 │                                                               │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-## User Flow Diagrams
+## Diagramas de flujo de usuario
 
-### Setup Flow
+### Flujo de configuración
 
 ```
 ┌─────────────┐
-│   Install   │
+│   Instalar  │
 │     App     │
 └──────┬──────┘
        │
        ▼
 ┌─────────────┐
-│    Open     │
+│    Abrir    │
 │     App     │
 └──────┬──────┘
        │
        ▼
 ┌─────────────────────────┐
-│  Tap "Habilitar         │
-│  Servicio" Button       │
+│  Pulsar "Habilitar      │
+│  Servicio"              │
 └──────┬──────────────────┘
        │
        ▼
 ┌─────────────────────────┐
-│  Open Accessibility     │
-│  Settings               │
+│  Abrir Ajustes de       │
+│  Accesibilidad          │
 └──────┬──────────────────┘
        │
        ▼
 ┌─────────────────────────┐
-│  Enable "Gesture        │
+│  Activar "Gesture       │
 │  Recorder" Service      │
 └──────┬──────────────────┘
        │
        ▼
 ┌─────────────────────────┐
-│  Grant Overlay          │
-│  Permission             │
+│  Conceder permiso de    │
+│  overlay                │
 └──────┬──────────────────┘
        │
        ▼
 ┌─────────────────────────┐
-│  Floating Controls      │
-│  Appear on Screen       │
+│  Aparecen controles     │
+│  flotantes en pantalla  │
 └─────────────────────────┘
 ```
 
-### Gesture Recording Flow
+### Flujo de grabación de gestos
 
 ```
 ┌────────────────┐
-│ User Taps      │
+│ Usuario pulsa  │
 │ "Iniciar       │
 │  Grabación"    │
 └────────┬───────┘
@@ -131,188 +132,144 @@
          ▼
 ┌────────────────────────┐
 │ isRecording = true     │
-│ Clear gesture list     │
-│ Start timestamp        │
+│ Limpiar lista de gestos│
+│ Iniciar timestamp      │
 └────────┬───────────────┘
          │
          ▼
 ┌────────────────────────┐     ┌──────────────────┐
-│ User Performs Touch    │────▶│ Capture (x, y,   │
-│ Gestures on Screen     │     │ action, time)    │
+│ Usuario realiza toques │────▶│ Capturar (x, y,  │
+│ en pantalla            │     │ action, timestamp)│
 └────────────────────────┘     └────────┬─────────┘
          │                              │
          │                              ▼
          │                     ┌────────────────────┐
-         │                     │ Store in           │
-         │                     │ recordedGestures   │
+         │                     │ Guardar en          │
+         │                     │ recordedGestures    │
          │                     └────────────────────┘
          ▼
 ┌────────────────────────┐
-│ User Taps "Detener     │
+│ Usuario pulsa "Detener │
 │ Grabación"             │
 └────────┬───────────────┘
          │
          ▼
 ┌────────────────────────┐
 │ isRecording = false    │
-│ Display gesture count  │
+│ Mostrar contador       │
 └────────────────────────┘
 ```
 
-### Gesture Playback Flow
+### Flujo de reproducción de gestos
 
 ```
 ┌────────────────┐
-│ User Taps      │
+│ Usuario pulsa  │
 │ "Reproducir    │
 │  Gestos"       │
 └────────┬───────┘
          │
          ▼
 ┌────────────────────────┐
-│ Group gestures into    │
-│ strokes (DOWN to UP)   │
+│ Agrupar gestos en      │
+│ trazos (DOWN → UP)     │
 └────────┬───────────────┘
          │
          ▼
 ┌────────────────────────┐
-│ For each stroke:       │
-│                        │
-│ 1. Create Path         │◀───┐
-│ 2. Add all points      │    │
-│ 3. Calculate duration  │    │
-└────────┬───────────────┘    │
-         │                     │
-         ▼                     │
-┌────────────────────────┐    │
-│ Build                  │    │
-│ GestureDescription     │    │
-└────────┬───────────────┘    │
-         │                     │
-         ▼                     │
-┌────────────────────────┐    │
-│ dispatchGesture()      │    │
-│ (System performs touch)│    │
-└────────┬───────────────┘    │
-         │                     │
-         ▼                     │
-┌────────────────────────┐    │
-│ More strokes?          │────┘
-│ Yes: Add delay & loop  │
-│ No: Complete           │
+│ Por cada trazo:        │
+│ 1. Crear Path          │
+│ 2. Añadir puntos       │
+│ 3. Calcular duración   │
+└────────┬───────────────┘
+         │
+         ▼
+┌────────────────────────┐
+│ Construir              │
+│ GestureDescription     │
+└────────┬───────────────┘
+         │
+         ▼
+┌────────────────────────┐
+│ dispatchGesture()      │
 └────────────────────────┘
 ```
 
-### Copy/Paste Text Flow
+### Flujo copiar/pegar
 
 ```
 ┌────────────────────────┐
-│ User selects text      │
-│ in any app             │
+│ Usuario selecciona     │
+│ texto en cualquier app │
 └────────┬───────────────┘
          │
          ▼
 ┌────────────────────────┐
-│ AccessibilityService   │
-│ receives               │
-│ TEXT_SELECTION_CHANGED │
+│ Servicio recibe evento  │
+│ TEXT_SELECTION_CHANGED  │
 └────────┬───────────────┘
          │
          ▼
 ┌────────────────────────┐
-│ Extract selected text  │
-│ from event source      │
+│ Extraer texto seleccionado│
 └────────┬───────────────┘
          │
          ▼
 ┌────────────────────────┐
-│ Copy to ClipboardManager│
-└────────────────────────┘
-
-For Pasting:
-
-┌────────────────────────┐
-│ pasteText() called     │
-└────────┬───────────────┘
-         │
-         ▼
-┌────────────────────────┐
-│ Get rootInActiveWindow │
-└────────┬───────────────┘
-         │
-         ▼
-┌────────────────────────┐
-│ Find editable node     │
-│ (recursive search)     │
-└────────┬───────────────┘
-         │
-         ▼
-┌────────────────────────┐
-│ Perform ACTION_SET_TEXT│
-│ with text argument     │
+│ Copiar al portapapeles │
 └────────────────────────┘
 ```
 
-## State Diagram
+## Diagrama de estados
 
 ```
 ┌─────────────────┐
-│   Initial       │
-│   State         │
+│   Inicial       │
+│   (Sin permisos)│
 └────────┬────────┘
-         │ App installed
+         │ App instalada
          ▼
 ┌─────────────────┐
-│  Permission     │
-│  Setup Required │
+│  Config. permisos│
 └────────┬────────┘
-         │ Permissions granted
+         │ Permisos concedidos
          ▼
-┌─────────────────┐      Start Recording
-│   Ready/Idle    │◀────────────────────┐
+┌─────────────────┐      Iniciar grabación
+│   Listo / Idle  │◀────────────────────┐
 └────────┬────────┘                     │
          │                               │
-         │ Tap Record                    │
+         │ Pulsar Grabar                │
          ▼                               │
-┌─────────────────┐      Stop Recording │
-│   Recording     │──────────────────────┘
+┌─────────────────┐      Parar grabación │
+│   Grabando      │──────────────────────┘
 └────────┬────────┘
          │
-         │ Gestures captured
+         │ Gestos capturados
          ▼
 ┌─────────────────┐
-│  Ready with     │
-│  Gestures       │
+│ Listo con gestos│
 └────────┬────────┘
          │
-         │ Tap Play
+         │ Pulsar Reproducir
          ▼
 ┌─────────────────┐
-│   Playing       │
-│   Gestures      │
+│ Reproduciendo   │
 └────────┬────────┘
-         │ Complete
+         │ Completado
          ▼
 ┌─────────────────┐
-│  Ready with     │
-│  Gestures       │
-└─────────────────┘
-         │
-         │ Tap Clear
-         ▼
-┌─────────────────┐
-│   Ready/Idle    │
+│ Listo con gestos│
 └─────────────────┘
 ```
 
-## Data Flow: Gesture Recording to Playback
+## Flujo de datos: grabación → reproducción
 
 ```
-Touch Event
+Evento táctil
     │
     ▼
 ┌───────────────────────────┐
-│ Record Phase              │
+│ Fase de grabación         │
 │                           │
 │ GestureData(              │
 │   x: 100.0,               │
@@ -338,51 +295,23 @@ Touch Event
             │
             ▼
 ┌───────────────────────────┐
-│ Group into Stroke         │
-│                           │
-│ Stroke 1: [               │
-│   GestureData(...),       │
-│   GestureData(...),       │
-│   GestureData(...)        │
-│ ]                         │
+│ Agrupar en trazos         │
 └───────────┬───────────────┘
             │
             ▼
 ┌───────────────────────────┐
-│ Convert to Path           │
-│                           │
-│ path.moveTo(100, 200)     │
-│ path.lineTo(150, 250)     │
-│ path.lineTo(200, 300)     │
-│                           │
-│ duration = 100ms          │
+│ Convertir a Path          │
 └───────────┬───────────────┘
             │
             ▼
 ┌───────────────────────────┐
-│ Create StrokeDescription  │
-│                           │
-│ StrokeDescription(        │
-│   path,                   │
-│   startTime: 0,           │
-│   duration: 100,          │
-│   willContinue: false     │
-│ )                         │
+│ Crear StrokeDescription   │
 └───────────┬───────────────┘
             │
             ▼
 ┌───────────────────────────┐
 │ Dispatch Gesture          │
-│                           │
-│ dispatchGesture(          │
-│   gestureDescription,     │
-│   callback,               │
-│   handler                 │
-│ )                         │
-└───────────┬───────────────┘
-            │
-            ▼
-     System Touch Event
+└───────────────────────────┘
 ```
 
-This architecture enables clean separation of concerns and makes the app maintainable and extensible.
+Esta arquitectura facilita la separación de responsabilidades y hace la aplicación mantenible y extensible.

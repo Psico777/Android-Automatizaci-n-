@@ -1,31 +1,32 @@
-# Technical Implementation Documentation
 
-## Architecture Overview
+# Documentación técnica de implementación
 
-The app is built using Android's AccessibilityService framework to intercept and dispatch touch events, along with WindowManager for displaying floating controls.
+## Visión general de la arquitectura
 
-### Core Components
+La aplicación está construida usando el framework `AccessibilityService` de Android para interceptar y despachar eventos táctiles, junto con `WindowManager` para mostrar controles flotantes.
 
-1. **MainActivity.kt** - Entry point and permission management
-2. **GestureRecorderService.kt** - AccessibilityService implementation
-3. **GestureData.kt** - Data model for storing gesture information
-4. **Layouts** - XML layouts for UI components
+### Componentes principales
 
-## Implementation Details
+1. **MainActivity.kt** - Punto de entrada y gestión de permisos
+2. **GestureRecorderService.kt** - Implementación del `AccessibilityService`
+3. **GestureData.kt** - Modelo de datos para almacenar información de gestos
+4. **Layouts** - Archivos XML con las interfaces de usuario
+
+## Detalles de implementación
 
 ### 1. AccessibilityService (GestureRecorderService)
 
-The service extends `AccessibilityService` and provides the core functionality:
+El servicio extiende `AccessibilityService` y proporciona la funcionalidad principal:
 
-#### Key Features:
+#### Funcionalidades clave:
 
-**Overlay Controls Creation**
+**Creación de controles overlay**
 ```kotlin
 private fun createOverlayControls() {
     windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
     overlayView = inflater.inflate(R.layout.overlay_controls, null)
     
-    // Use TYPE_APPLICATION_OVERLAY for Android 8.0+
+    // Usar TYPE_APPLICATION_OVERLAY para Android 8.0+
     val params = WindowManager.LayoutParams(
         WindowManager.LayoutParams.WRAP_CONTENT,
         WindowManager.LayoutParams.WRAP_CONTENT,
@@ -42,14 +43,14 @@ private fun createOverlayControls() {
 }
 ```
 
-**Gesture Recording**
-- Gestures are stored as `GestureData` objects containing:
-  - X coordinate
-  - Y coordinate  
-  - Action type (ACTION_DOWN, ACTION_MOVE, ACTION_UP)
-  - Timestamp (relative to recording start)
+**Grabación de gestos**
+- Los gestos se almacenan como objetos `GestureData` que contienen:
+  - Coordenada X
+  - Coordenada Y  
+  - Tipo de acción (ACTION_DOWN, ACTION_MOVE, ACTION_UP)
+  - Timestamp (relativo al inicio de la grabación)
 
-**Gesture Playback**
+**Reproducción de gestos**
 ```kotlin
 private fun performGestureStroke(stroke: List<GestureData>) {
     val path = Path()
@@ -73,16 +74,16 @@ private fun performGestureStroke(stroke: List<GestureData>) {
 }
 ```
 
-**Text Copy/Paste**
-- Text selection events are captured via `TYPE_VIEW_TEXT_SELECTION_CHANGED`
-- Selected text is automatically copied to clipboard
-- Paste functionality finds editable nodes and uses `ACTION_SET_TEXT`
+**Copiar/Pegar texto**
+- Los eventos de selección de texto se capturan mediante `TYPE_VIEW_TEXT_SELECTION_CHANGED`
+- El texto seleccionado se copia automáticamente al portapapeles
+- La función de pegado busca nodos editables y utiliza `ACTION_SET_TEXT`
 
-### 2. Permission Management (MainActivity)
+### 2. Gestión de permisos (MainActivity)
 
-The app requires two critical permissions:
+La app requiere dos permisos críticos:
 
-#### Accessibility Permission
+#### Permiso de accesibilidad
 ```kotlin
 private fun isAccessibilityServiceEnabled(): Boolean {
     val expectedComponentName = "$packageName/${GestureRecorderService::class.java.name}"
@@ -94,7 +95,7 @@ private fun isAccessibilityServiceEnabled(): Boolean {
 }
 ```
 
-#### Overlay Permission
+#### Permiso de overlay
 ```kotlin
 private fun checkOverlayPermission() {
     if (!Settings.canDrawOverlays(this)) {
@@ -107,9 +108,9 @@ private fun checkOverlayPermission() {
 }
 ```
 
-### 3. Data Model (GestureData)
+### 3. Modelo de datos (GestureData)
 
-Simple data class to store gesture information:
+Clase de datos sencilla para almacenar la información de cada gesto:
 ```kotlin
 data class GestureData(
     val x: Float,
@@ -119,19 +120,19 @@ data class GestureData(
 )
 ```
 
-## AndroidManifest Configuration
+## Configuración en AndroidManifest
 
-### Required Permissions
+### Permisos requeridos
 
 ```xml
-<!-- System alert window for overlay -->
+<!-- Permiso para mostrar ventanas sobre otras apps -->
 <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
-<!-- Write settings (commented out as not strictly required) -->
+<!-- (Opcional) WRITE_SETTINGS si se necesitase -->
 <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 ```
 
-### Service Declaration
+### Declaración del servicio
 
 ```xml
 <service
@@ -147,9 +148,9 @@ data class GestureData(
 </service>
 ```
 
-## Accessibility Service Configuration
+## Configuración del AccessibilityService
 
-Located at `res/xml/accessibility_service_config.xml`:
+Archivo: `res/xml/accessibility_service_config.xml`:
 
 ```xml
 <accessibility-service
@@ -163,123 +164,122 @@ Located at `res/xml/accessibility_service_config.xml`:
     android:packageNames="" />
 ```
 
-Key attributes:
-- `canPerformGestures="true"` - Enables gesture dispatch (API 24+)
-- `canRetrieveWindowContent="true"` - Access to window content for text operations
-- `typeAllMask` - Receive all accessibility events
-- Empty `packageNames` - Monitor all apps
+Atributos clave:
+- `canPerformGestures="true"` - Habilita el dispatch de gestos (API 24+)
+- `canRetrieveWindowContent="true"` - Permite acceso al contenido de ventanas para operaciones de texto
+- `typeAllMask` - Recibe todos los eventos de accesibilidad
+- `packageNames` vacío - Monitoriza todas las aplicaciones
 
-## UI Components
+## Componentes de UI
 
-### Main Activity Layout
+### Layout de MainActivity
 
-Features:
-- Service status indicator
-- Button to open accessibility settings
-- Instructions for users
+Características:
+- Indicador del estado del servicio
+- Botón para abrir ajustes de accesibilidad
+- Instrucciones para el usuario
 
-### Overlay Controls Layout
+### Layout de controles overlay
 
-Floating controls with:
-- Record/Stop button - Toggles gesture recording
-- Play button - Replays recorded gestures
-- Clear button - Clears recorded gestures
-- Status text - Shows recording state and gesture count
+Controles flotantes con:
+- Botón Grabar/Parar - Alterna la grabación
+- Botón Reproducir - Reproduce gestos grabados
+- Botón Limpiar - Borra gestos grabados
+- Texto de estado - Muestra estado y contador de gestos
 
-The overlay is draggable using touch listeners on the root view.
+El overlay es arrastrable mediante listeners táctiles.
 
-## Gesture Recording Algorithm
+## Algoritmo de grabación
 
-1. **Start Recording**:
-   - Clear previous gestures
-   - Set `isRecording = true`
-   - Record start timestamp
+1. **Iniciar grabación**:
+   - Limpiar gestos previos
+   - `isRecording = true`
+   - Registrar timestamp de inicio
 
-2. **Capture Gestures**:
-   - Note: Standard AccessibilityService events don't provide exact touch coordinates
-   - This implementation provides the framework for gesture recording
-   - In production, you might need additional touch interception methods
+2. **Capturar gestos**:
+   - Nota: Los eventos estándar de `AccessibilityService` no siempre ofrecen coordenadas exactas
+   - Esta implementación ofrece la estructura para grabar gestos
+   - En producción puede necesitarse interceptación táctil adicional
 
-3. **Stop Recording**:
-   - Set `isRecording = false`
-   - Display count of recorded gestures
+3. **Detener grabación**:
+   - `isRecording = false`
+   - Mostrar número de gestos grabados
 
-4. **Playback**:
-   - Group gestures into strokes (DOWN to UP sequences)
-   - Create Path objects for each stroke
-   - Dispatch gestures using `dispatchGesture()`
-   - Add delays between strokes
+4. **Reproducción**:
+   - Agrupar gestos en trazos (DOWN → UP)
+   - Crear objetos `Path` por trazo
+   - Despachar con `dispatchGesture()`
+   - Añadir retrasos entre trazos si es necesario
 
-## Limitations and Notes
+## Limitaciones y notas
 
-### Current Limitations:
+### Limitaciones actuales:
 
-1. **Touch Coordinate Capture**: 
-   - AccessibilityService events don't directly provide touch coordinates
-   - The framework is in place, but actual coordinate capture may require additional implementation
-   - Consider using accessibility node positions or additional overlays for precise tracking
+1. **Captura de coordenadas táctiles**: 
+   - Los eventos de `AccessibilityService` no siempre proporcionan coordenadas exactas
+   - La estructura está implementada, pero la captura precisa puede requerir un overlay táctil adicional
 
-2. **Android Version Requirements**:
-   - Gesture dispatch requires API 24 (Android 7.0) or higher
-   - Overlay permissions require user interaction on API 23+
+2. **Requisitos de versión Android**:
+   - `dispatchGesture()` requiere API 24 (Android 7.0) o superior
+   - Permisos de overlay requieren interacción del usuario en API 23+
 
-3. **Performance**:
-   - Large numbers of gestures may cause memory issues
-   - Long sequences might have timing drift
+3. **Rendimiento**:
+   - Secuencias largas de gestos pueden consumir memoria
+   - Pueden producirse desviaciones temporales en ejecuciones muy largas
 
-### Possible Enhancements:
+### Posibles mejoras:
 
-1. **Save/Load Gestures**: Persist gestures to storage
-2. **Named Sequences**: Allow naming and managing multiple gesture sequences
-3. **Gesture Editor**: UI to modify recorded gestures
-4. **Loop Playback**: Repeat gestures multiple times
-5. **Screen Recording**: Capture and replay along with visual feedback
-6. **Precise Touch Tracking**: Implement additional touch interception for exact coordinates
+1. **Guardar/Cargar gestos**: Persistir gestos en almacenamiento
+2. **Secuencias con nombre**: Administrar múltiples secuencias guardadas
+3. **Editor de gestos**: UI para modificar gestos grabados
+4. **Reproducción en bucle**: Repetir gestos N veces
+5. **Grabación de pantalla**: Capturar pantalla junto con gestos para depuración
+6. **Captura táctil precisa**: Implementar overlay para captura exacta
 
-## Security Considerations
+## Consideraciones de seguridad
 
-This app requires powerful permissions that could be misused:
+La app requiere permisos potentes que podrían ser mal utilizados:
 
-- **AccessibilityService**: Can read screen content and inject touches
-- **SYSTEM_ALERT_WINDOW**: Can draw over other apps
+- **AccessibilityService**: Puede leer contenido de pantalla e inyectar toques
+- **SYSTEM_ALERT_WINDOW**: Puede dibujar sobre otras apps
 
-Responsible use guidelines:
-- Only use for legitimate automation purposes
-- Inform users of data collection (if any)
-- Don't capture sensitive information
-- Follow Google Play policies if publishing
+Buenas prácticas:
+- Usar únicamente para automatización legítima
+- Informar al usuario sobre cualquier recogida de datos
+- Evitar capturar información sensible
+- Cumplir las políticas de Google Play al publicar
 
-## Testing Recommendations
+## Recomendaciones de pruebas
 
-1. **Manual Testing**:
-   - Test on multiple Android versions (7.0, 8.0, 9.0, 10+)
-   - Test on different screen sizes and resolutions
-   - Verify permissions flow on first install
+1. **Pruebas manuales**:
+   - Probar en varias versiones de Android (7.0, 8.0, 9.0, 10+)
+   - Probar en distintos tamaños y resoluciones de pantalla
+   - Verificar el flujo de permisos en una instalación limpia
 
-2. **Automated Testing**:
-   - Unit tests for GestureData logic
-   - UI tests for MainActivity
-   - Integration tests for service lifecycle
+2. **Pruebas automatizadas**:
+   - Tests unitarios para la lógica de `GestureData`
+   - Tests UI para `MainActivity`
+   - Tests de integración para el ciclo de vida del servicio
 
-3. **Edge Cases**:
-   - Service disabled during recording
-   - App killed during playback
-   - Screen rotation during recording
-   - Multiple rapid taps
-   - Long-press gestures
+3. **Casos límite**:
+   - Servicio deshabilitado durante la grabación
+   - App terminada durante la reproducción
+   - Rotación de pantalla durante la grabación
+   - Pulsaciones rápidas consecutivas
+   - Gestos de larga duración
 
-## Performance Optimization
+## Optimización de rendimiento
 
-- Limit maximum number of gestures stored
-- Use efficient data structures for gesture lookup
-- Minimize overlay redraw operations
-- Release resources promptly in onDestroy()
+- Limitar número máximo de gestos almacenados
+- Usar estructuras eficientes para búsqueda/recuperación
+- Minimizar repintados del overlay
+- Liberar recursos en `onDestroy()`
 
-## Future Development
+## Desarrollo futuro
 
-Potential features for future versions:
-- AI-powered gesture recognition
-- Cloud sync for gesture sequences
-- Macro programming language
-- Integration with Tasker/automation apps
-- Screen recording with gesture overlay
+Características potenciales:
+- Reconocimiento de gestos con IA
+- Sincronización en la nube para secuencias
+- Lenguaje de macros para automatizaciones
+- Integración con Tasker u otras apps de automatización
+- Grabación de pantalla con overlay de gestos

@@ -1,35 +1,36 @@
-# Gradle Wrapper JAR File Note
 
-The `gradle-wrapper.jar` file is required for the Gradle wrapper to function but is not included in this repository due to build environment restrictions.
+# Nota sobre el JAR del Gradle Wrapper
 
-## How to Get the Wrapper JAR
+El archivo `gradle-wrapper.jar` es necesario para que el Gradle wrapper funcione, pero no se incluye en este repositorio debido a restricciones del entorno de construcción.
 
-### Option 1: Generate it locally
-Run this command in the project root directory:
+## Cómo obtener el wrapper JAR
+
+### Opción 1: Generarlo localmente
+Ejecuta este comando en la raíz del proyecto:
 ```bash
 gradle wrapper --gradle-version 8.0
 ```
 
-This will download and set up the complete Gradle wrapper, including `gradle-wrapper.jar`.
+Esto descargará y configurará el Gradle wrapper, incluyendo `gradle-wrapper.jar`.
 
-### Option 2: Use Android Studio
-1. Open the project in Android Studio
-2. Android Studio will automatically download the Gradle wrapper if it's missing
-3. The IDE will handle Gradle synchronization automatically
+### Opción 2: Usar Android Studio
+1. Abre el proyecto en Android Studio
+2. Android Studio descargará automáticamente el Gradle wrapper si falta
+3. El IDE gestionará la sincronización de Gradle
 
-### Option 3: Manual Download
-Download the gradle-wrapper.jar for version 8.0 from:
+### Opción 3: Descarga manual
+Descarga `gradle-8.0-bin.zip` desde:
 https://services.gradle.org/distributions/gradle-8.0-bin.zip
 
-Extract it and copy `lib/gradle-wrapper.jar` to `gradle/wrapper/gradle-wrapper.jar`
+Extrae el ZIP y copia `lib/gradle-wrapper.jar` a `gradle/wrapper/gradle-wrapper.jar`
 
-## Why is it Missing?
+## ¿Por qué falta?
 
-The wrapper JAR was not included because:
-1. Network restrictions in the build environment prevented automatic download
-2. Binary files are often excluded from version control
-3. The wrapper is easily regenerated in a standard development environment
+El JAR del wrapper no se incluyó porque:
+1. Restricciones de red en el entorno impidieron la descarga automática
+2. Normalmente no se versionan archivos binarios grandes
+3. El wrapper se puede regenerar en un entorno de desarrollo estándar
 
-## What to Do
+## Qué debes hacer
 
-Before building the project, ensure you have the gradle-wrapper.jar by using one of the methods above.
+Antes de compilar el proyecto, asegúrate de tener `gradle-wrapper.jar` usando una de las opciones anteriores.

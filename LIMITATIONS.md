@@ -1,21 +1,22 @@
-# Known Limitations and Future Enhancements
 
-## Current Limitations
+# Limitaciones conocidas y mejoras futuras
 
-### 1. Gesture Coordinate Capture
+## Limitaciones actuales
 
-**Issue**: AccessibilityService events (`TYPE_TOUCH_INTERACTION_START`, etc.) do not provide exact touch coordinates.
+### 1. Captura de coordenadas de gestos
 
-**Impact**: The `recordGesture()` method is in place but requires an external mechanism to feed it coordinates.
+**Problema**: Los eventos de `AccessibilityService` (p. ej., `TYPE_TOUCH_INTERACTION_START`) no siempre proporcionan coordenadas táctiles exactas.
 
-**Workarounds**:
-- Use an additional transparent overlay with `OnTouchListener` to capture touch events
-- Implement a custom view that intercepts touch events and forwards them to the service
-- Use AccessibilityNodeInfo bounds to approximate touch positions based on which views are touched
+**Impacto**: El método `recordGesture()` está preparado, pero necesita un mecanismo externo para recibir las coordenadas exactas.
 
-**Example Implementation** (for future enhancement):
+**Soluciones alternativas**:
+- Usar un overlay transparente adicional con `OnTouchListener` para capturar eventos táctiles
+- Implementar una vista personalizada que intercepte toques y los reenvíe al servicio
+- Usar los bounds de `AccessibilityNodeInfo` para aproximar posiciones basadas en las vistas tocadas
+
+**Ejemplo (implementación futura)**:
 ```kotlin
-// In a separate overlay component
+// En un componente overlay separado
 class TouchCaptureOverlay : View {
     private var service: GestureRecorderService? = null
     
@@ -25,206 +26,197 @@ class TouchCaptureOverlay : View {
             event.rawY,
             event.action
         )
-        return false // Let touches pass through
+        return false // Permitir que el toque pase
     }
 }
 ```
 
-### 2. Network Build Restrictions
+### 2. Restricciones de compilación por red
 
-**Issue**: Cannot build the project in the current environment due to network restrictions (dl.google.com blocked).
+**Problema**: No es posible compilar en este entorno debido a restricciones de red (dl.google.com bloqueado).
 
-**Solution**: Build in a standard Android development environment with internet access.
+**Solución**: Compilar en un entorno de desarrollo Android con acceso a Internet.
 
-### 3. Gesture Playback Timing
+### 3. Desviación en el timing de reproducción
 
-**Issue**: Long sequences may have timing drift due to system delays.
+**Problema**: Secuencias largas pueden presentar deriva temporal por retardos del sistema.
 
-**Mitigation**: Keep gesture sequences reasonably short or implement drift correction.
+**Mitigación**: Mantener secuencias razonablemente cortas o implementar corrección de deriva.
 
-### 4. Multi-Touch Gestures
+### 4. Gestos multitáctiles
 
-**Issue**: Current implementation handles single-touch gestures only.
+**Problema**: La implementación actual maneja sólo gestos de un solo punto (single-touch).
 
-**Future Enhancement**: Extend GestureDescription to support multiple simultaneous strokes.
+**Mejora futura**: Extender `GestureDescription` para soportar múltiples trazos simultáneos.
 
-## Recommended Enhancements
+## Mejoras recomendadas
 
-### High Priority
+### Alta prioridad
 
-1. **Implement Touch Coordinate Capture**
-   - Add transparent overlay for touch interception
-   - Connect overlay events to `recordGesture()` method
-   - Ensure overlay doesn't interfere with other apps
+1. **Implementar captura de coordenadas táctiles**
+   - Añadir overlay transparente para interceptar toques
+   - Conectar eventos del overlay con `recordGesture()`
+   - Asegurar que el overlay no interfiera con otras apps
 
-2. **Add Gesture Storage**
-   - Save/load gestures to/from SharedPreferences or database
-   - Name and manage multiple gesture sequences
-   - Export/import gesture files
+2. **Añadir almacenamiento de gestos**
+   - Guardar/cargar gestos en `SharedPreferences` o base de datos
+   - Nombrar y gestionar múltiples secuencias
+   - Exportar/importar archivos de gestos
 
-3. **Enhanced Error Handling**
-   - Handle service disconnection gracefully
-   - Validate gesture data before playback
-   - Provide user feedback for failures
+3. **Mejor manejo de errores**
+   - Controlar desconexiones del servicio de forma elegante
+   - Validar datos antes de reproducir
+   - Mostrar feedback usuario ante errores
 
-### Medium Priority
+### Prioridad media
 
-4. **Gesture Editing**
-   - UI to view and modify recorded gestures
-   - Delete individual gestures from sequence
-   - Adjust timing between gestures
+4. **Editor de gestos**
+   - UI para ver y modificar gestos grabados
+   - Borrar gestos individuales
+   - Ajustar timings
 
-5. **Loop Playback**
-   - Option to repeat gestures N times or indefinitely
-   - Add delays between loops
-   - Stop condition controls
+5. **Reproducción en bucle**
+   - Opción para repetir N veces o indefinidamente
+   - Añadir retardos entre repeticiones
+   - Controles para detener
 
-6. **Screen Recording Integration**
-   - Record screen while capturing gestures
-   - Visual playback preview
-   - Debugging aid
+6. **Integración con grabación de pantalla**
+   - Grabar pantalla mientras se capturan gestos
+   - Previsualización visual de reproducción
+   - Ayuda para depuración
 
-### Low Priority
+### Baja prioridad
 
-7. **Multi-Touch Support**
-   - Two-finger gestures (pinch, zoom)
-   - Multi-point simultaneous touches
-   - Complex gesture patterns
+7. **Soporte multitáctil**
+   - Gestos con dos dedos (pinch, zoom)
+   - Toques simultáneos multipunto
 
-8. **Gesture Recognition**
-   - Identify common gestures (swipe, tap, long-press)
-   - Pattern matching
-   - Gesture library
+8. **Reconocimiento de gestos**
+   - Identificar gestos comunes (swipe, tap, long-press)
+   - Biblioteca de patrones
 
-9. **Automation Scripting**
-   - Simple scripting language for sequences
-   - Conditional logic
-   - Variables and loops
+9. **Scripting de automatización**
+   - Lenguaje simple para secuencias
+   - Lógica condicional
+   - Variables y bucles
 
-## Security Considerations
+## Consideraciones de seguridad
 
-### Current Implementation
+### Implementación actual
 
-✅ Permissions properly declared in manifest
-✅ User must manually enable accessibility service
-✅ Overlay permission requires user consent
-✅ No sensitive data is logged or stored
+✅ Permisos correctamente declarados en el manifiesto
+✅ El usuario debe activar manualmente el servicio de accesibilidad
+✅ El permiso de overlay requiere consentimiento del usuario
+✅ No se almacena ni registra información sensible
 
-### Additional Recommendations
+### Recomendaciones adicionales
 
-1. **Data Privacy**
-   - Don't record gestures in password fields
-   - Exclude sensitive apps (banking, etc.)
-   - Clear text clipboard after paste
+1. **Privacidad de datos**
+   - No grabar en campos de contraseña
+   - Excluir apps sensibles (banca, etc.)
+   - Limpiar el portapapeles tras pegar
 
-2. **Prevent Misuse**
-   - Add rate limiting for gesture playback
-   - Require user confirmation for long sequences
-   - Implement usage logging
+2. **Prevención de uso indebido**
+   - Añadir limitación de tasa para reproducción de gestos
+   - Requerir confirmación para secuencias largas
+   - Registrar uso para auditoría
 
-3. **Security Auditing**
-   - Regular security reviews
-   - Penetration testing
-   - Compliance with Android security best practices
+3. **Auditoría de seguridad**
+   - Revisiones periódicas de seguridad
+   - Pruebas de penetración
+   - Cumplir prácticas recomendadas de Android
 
-## Testing Recommendations
+## Recomendaciones de pruebas
 
-### Manual Testing
+### Pruebas manuales
 
-- [ ] Test on Android 7.0, 8.0, 9.0, 10, 11, 12, 13, 14
-- [ ] Test on various screen sizes (phone, tablet)
-- [ ] Test with different screen densities
-- [ ] Verify permissions flow on fresh install
-- [ ] Test with different languages/locales
-- [ ] Test battery impact during extended use
+- [ ] Probar en Android 7.0–14
+- [ ] Probar en distintos tamaños y densidades de pantalla
+- [ ] Verificar el flujo de permisos en instalación limpia
+- [ ] Probar impacto en batería durante uso prolongado
 
-### Automated Testing
+### Pruebas automatizadas
 
-- [ ] Unit tests for GestureData
-- [ ] Unit tests for coordinate conversion
-- [ ] Integration tests for service lifecycle
-- [ ] UI tests for MainActivity
-- [ ] Mock tests for AccessibilityService events
+- [ ] Tests unitarios para `GestureData`
+- [ ] Tests de conversión de coordenadas
+- [ ] Tests de integración para ciclo de vida del servicio
+- [ ] Tests UI para `MainActivity`
 
-### Edge Cases
+### Casos límite
 
-- [ ] Service disabled during recording
-- [ ] Service disabled during playback
-- [ ] App killed during recording
-- [ ] Screen rotation during operation
-- [ ] Multiple rapid taps
-- [ ] Very long gesture sequences (1000+ gestures)
-- [ ] Gestures at screen edges
-- [ ] Device with notch/cutout
-- [ ] Foldable devices
+- [ ] Servicio deshabilitado durante grabación
+- [ ] App terminada durante grabación/reproducción
+- [ ] Rotación de pantalla durante operación
+- [ ] Pulsaciones rápidas consecutivas
+- [ ] Secuencias muy largas (>1000 gestos)
 
-## Performance Optimization
+## Optimización de rendimiento
 
-### Current Performance
+### Rendimiento actual
 
-- Gesture storage: O(1) insertion, O(n) playback
-- Memory usage: ~100 bytes per gesture
-- CPU usage: Minimal when idle, moderate during playback
+- Almacenamiento de gestos: inserción O(1), reproducción O(n)
+- Uso de memoria: ~100 bytes por gesto (estimado)
+- CPU: bajo en reposo, moderado durante reproducción
 
-### Potential Optimizations
+### Optimización posible
 
-1. **Memory**
-   - Limit maximum number of stored gestures
-   - Compress gesture data for long sequences
-   - Use more efficient data structures
+1. **Memoria**
+   - Limitar número máximo de gestos
+   - Comprimir datos de gestos largos
+   - Usar estructuras más eficientes
 
 2. **CPU**
-   - Batch gesture processing
-   - Use hardware acceleration where possible
-   - Optimize path calculations
+   - Procesar gestos por lotes
+   - Aprovechar aceleración hardware si es posible
+   - Optimizar cálculos de paths
 
-3. **Battery**
-   - Reduce overlay updates when not recording
-   - Minimize wake locks
-   - Efficient gesture dispatch
+3. **Batería**
+   - Reducir actualizaciones del overlay cuando no graba
+   - Minimizar wake locks
+   - Despachar gestos de forma eficiente
 
-## Compatibility Notes
+## Notas de compatibilidad
 
-### Minimum Requirements
-- Android 7.0 (API 24) - Required for `dispatchGesture()`
-- Android 8.0 (API 26) - Required for `TYPE_APPLICATION_OVERLAY`
+### Requisitos mínimos
+- Android 7.0 (API 24) - Requerido para `dispatchGesture()`
+- Android 8.0 (API 26) - Recomendado para `TYPE_APPLICATION_OVERLAY`
 
-### Tested Configurations
-- ✅ Android emulator (x86, arm64)
-- ✅ Physical device compatibility verified for structure
-- ⚠️ Actual runtime testing required in production environment
+### Configuraciones probadas
+- ✅ Emulador Android (x86, arm64)
+- ✅ Dispositivo físico (verificación estructural)
+- ⚠️ Pruebas en entorno real requeridas antes de producción
 
-### Known Device Issues
-- Some manufacturers restrict AccessibilityService capabilities
-- Overlay permissions may require additional steps on certain ROMs
-- Gesture dispatch may be blocked by some security apps
+### Problemas conocidos por dispositivo
+- Algunos fabricantes limitan capacidades del AccessibilityService
+- Permisos de overlay pueden requerir pasos adicionales en ciertas ROMs
+- Apps de seguridad pueden bloquear `dispatchGesture()`
 
-## Contributing Guidelines
+## Contribuir
 
-If extending this project:
+Si vas a extender el proyecto:
 
-1. **Code Style**
-   - Follow Kotlin coding conventions
-   - Use meaningful variable names
-   - Add KDoc comments for public APIs
-   - Keep functions focused and small
+1. **Estilo de código**
+   - Seguir convenciones de Kotlin
+   - Nombres claros
+   - Documentar APIs públicas con KDoc
+   - Funciones cortas y con responsabilidad única
 
-2. **Testing**
-   - Add unit tests for new functionality
-   - Update integration tests
-   - Test on multiple Android versions
+2. **Pruebas**
+   - Añadir tests unitarios para nueva funcionalidad
+   - Actualizar tests de integración
+   - Probar en múltiples versiones de Android
 
-3. **Documentation**
-   - Update README with new features
-   - Add technical docs for complex changes
-   - Include usage examples
+3. **Documentación**
+   - Actualizar `README` con nuevas funcionalidades
+   - Añadir docs técnicas para cambios complejos
+   - Incluir ejemplos de uso
 
-4. **Security**
-   - Review security implications
-   - Don't introduce new vulnerabilities
-   - Follow principle of least privilege
+4. **Seguridad**
+   - Revisar implicaciones de seguridad
+   - No introducir vulnerabilidades
+   - Seguir el principio de menor privilegio
 
-## Resources
+## Recursos
 
 - [Android AccessibilityService Documentation](https://developer.android.com/reference/android/accessibilityservice/AccessibilityService)
 - [GestureDescription API](https://developer.android.com/reference/android/accessibilityservice/GestureDescription)

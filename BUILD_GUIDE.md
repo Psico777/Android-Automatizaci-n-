@@ -1,126 +1,127 @@
-# Build and Installation Guide
 
-## Prerequisites
+# Guía de compilación e instalación
 
-1. **Android Studio** - Download from https://developer.android.com/studio
-2. **JDK 8 or higher** - Usually bundled with Android Studio
-3. **Android SDK** - Install through Android Studio SDK Manager
-   - Minimum SDK: API 24 (Android 7.0)
-   - Target SDK: API 34 (Android 14)
+## Requisitos previos
 
-## Building the Project
+1. **Android Studio** - Descárgalo desde https://developer.android.com/studio
+2. **JDK 8 o superior** - Normalmente incluido con Android Studio
+3. **Android SDK** - Instálalo desde el SDK Manager de Android Studio
+   - SDK mínimo: API 24 (Android 7.0)
+   - SDK objetivo: API 34 (Android 14)
 
-### Method 1: Using Android Studio
+## Compilar el proyecto
 
-1. Open Android Studio
-2. Click "Open an Existing Project"
-3. Navigate to the project directory and select it
-4. Wait for Gradle sync to complete
-5. Build the project:
-   - Menu: Build → Make Project
-   - Or press: Ctrl+F9 (Windows/Linux) or Cmd+F9 (Mac)
+### Método 1: Usando Android Studio
 
-### Method 2: Using Command Line
+1. Abre Android Studio
+2. Selecciona "Open an Existing Project"
+3. Navega hasta la carpeta del proyecto y selecciónala
+4. Espera a que Gradle sincronice
+5. Para compilar:
+   - Menú: Build → Make Project
+   - O presiona: Ctrl+F9 (Windows/Linux) o Cmd+F9 (Mac)
+
+### Método 2: Línea de comandos
 
 ```bash
-# On Linux/Mac
+# En Linux/Mac
 ./gradlew assembleDebug
 
-# On Windows
+# En Windows
 gradlew.bat assembleDebug
 ```
 
-The APK will be generated at:
+El APK generado estará en:
 ```
 app/build/outputs/apk/debug/app-debug.apk
 ```
 
-## Installing on Device
+## Instalar en un dispositivo
 
-### Using Android Studio
+### Usando Android Studio
 
-1. Connect your Android device via USB (enable USB debugging in Developer Options)
-2. Click the "Run" button (green triangle) or press Shift+F10
-3. Select your device from the list
+1. Conecta el dispositivo por USB (habilita Depuración USB en Opciones de desarrollador)
+2. Haz clic en el botón "Run" (triángulo verde) o presiona Shift+F10
+3. Selecciona tu dispositivo
 
-### Using ADB
+### Usando ADB
 
 ```bash
 adb install app/build/outputs/apk/debug/app-debug.apk
 ```
 
-## First Time Setup
+## Primera configuración
 
-After installing the app, you need to grant permissions:
+Tras instalar la app, debes conceder permisos:
 
-### 1. Enable Accessibility Service
+### 1. Habilitar el servicio de accesibilidad
 
-1. Open the app
-2. Tap "Habilitar Servicio" button
-3. In the Accessibility Settings, find "Gesture Recorder"
-4. Toggle it ON
-5. Confirm the permission dialog
+1. Abre la app
+2. Pulsa el botón "Habilitar Servicio"
+3. En Ajustes de accesibilidad, busca "Gesture Recorder"
+4. Actívalo (ON)
+5. Confirma el diálogo de permisos
 
-### 2. Grant Overlay Permission
+### 2. Conceder permiso de overlay
 
-1. When prompted, tap "Allow" to grant overlay permission
-2. If not prompted automatically:
-   - Go to Settings → Apps → Gesture Recorder
-   - Tap "Display over other apps"
-   - Toggle it ON
+1. Cuando se solicite, pulsa "Allow" para conceder el permiso de overlay
+2. Si no aparece la solicitud automáticamente:
+   - Ve a Ajustes → Apps → Gesture Recorder
+   - Selecciona "Display over other apps"
+   - Actívalo (ON)
 
-## Testing the App
+## Probar la aplicación
 
-### Testing Gesture Recording
+### Probar la grabación de gestos
 
-1. After enabling all permissions, floating buttons will appear on screen
-2. Drag the buttons to a convenient location
-3. Tap "Iniciar Grabación" to start recording
-4. Perform some touch gestures on the screen
-5. Tap "Detener Grabación" to stop
-6. Tap "Reproducir Gestos" to replay your recorded gestures
+1. Tras conceder permisos, aparecerán botones flotantes en pantalla
+2. Arrastra los botones donde te resulten cómodos
+3. Pulsa "Iniciar Grabación" para comenzar
+4. Realiza gestos táctiles en la pantalla
+5. Pulsa "Detener Grabación" para finalizar
+6. Pulsa "Reproducir Gestos" para reproducir lo grabado
 
-### Testing Copy/Paste Functionality
+### Probar copiar/pegar
 
-1. Open any app with text (e.g., browser, notes)
-2. Select some text
-3. The AccessibilityService will automatically capture it
-4. Open another app with a text field
-5. The captured text is available in your clipboard
+1. Abre cualquier app con texto (p. ej., navegador, notas)
+2. Selecciona texto
+3. El servicio capturará el texto automáticamente
+4. Abre otra app con un campo de texto
+5. El texto capturado estará disponible en el portapapeles
 
-## Troubleshooting
+## Resolución de problemas
 
-### App Crashes on Launch
+### La app se cierra al iniciar
 
-- Check that you're using Android 7.0 (API 24) or higher
-- Verify that all permissions are granted
+- Comprueba que usas Android 7.0 (API 24) o superior
+- Verifica que se hayan concedido todos los permisos
 
-### Overlay Buttons Not Appearing
+### Los botones flotantes no aparecen
 
-- Ensure Accessibility Service is enabled
-- Check that overlay permission is granted
-- Try restarting the app
+- Asegura que el servicio de accesibilidad esté habilitado
+- Comprueba que el permiso de overlay esté concedido
+- Reinicia la app si es necesario
 
-### Gestures Not Recording
+### No se graban gestos
 
-- Verify the Accessibility Service is running
-- Make sure you pressed "Iniciar Grabación" button
-- Check system settings for any accessibility restrictions
+- Verifica que el servicio de accesibilidad esté en ejecución
+- Asegúrate de haber pulsado "Iniciar Grabación"
+- Revisa restricciones de accesibilidad en ajustes del sistema
 
-### Gestures Not Playing Back
+### No se reproducen gestos
 
-- Ensure Android version is 7.0 or higher (gesture dispatch requires API 24+)
-- Check that gestures were successfully recorded
-- Try recording simpler gestures first (single taps)
+- Asegura que la versión de Android sea 7.0 o superior (dispatchGesture requiere API 24+)
+- Verifica que se haya grabado correctamente la secuencia
+- Intenta grabar gestos sencillos (taps simples) primero
 
-## Building for Release
+## Compilar para release
 
-1. Generate a signing key:
+1. Genera una clave de firma:
 ```bash
 keytool -genkey -v -keystore my-release-key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias my-alias
 ```
 
-2. Update `app/build.gradle.kts` with signing config:
+2. Actualiza `app/build.gradle.kts` con la configuración de firma:
 ```kotlin
 android {
     signingConfigs {
@@ -135,27 +136,27 @@ android {
     buildTypes {
         getByName("release") {
             signingConfig = signingConfigs.getByName("release")
-            // ... other config
+            // ... otras configuraciones
         }
     }
 }
 ```
 
-3. Build release APK:
+3. Genera el APK de release:
 ```bash
 ./gradlew assembleRelease
 ```
 
-## Security Notes
+## Notas de seguridad
 
-- Never commit your signing keys to version control
-- Store passwords securely (consider using environment variables)
-- The app requires sensitive permissions - use responsibly
-- Test thoroughly on different Android versions
+- Nunca subas tus claves de firma al control de versiones
+- Almacena contraseñas de forma segura (p. ej., variables de entorno)
+- La app requiere permisos sensibles: úsalos responsablemente
+- Prueba en varias versiones de Android antes de publicar
 
-## System Requirements for Development
+## Requisitos del sistema para desarrollo
 
-- **OS**: Windows 10/11, macOS 10.14+, or Linux
-- **RAM**: Minimum 8 GB (16 GB recommended)
-- **Disk Space**: At least 10 GB free space
-- **Screen Resolution**: 1280 x 800 minimum
+- **SO**: Windows 10/11, macOS 10.14+ o Linux
+- **RAM**: Mínimo 8 GB (recomendado 16 GB)
+- **Espacio en disco**: Al menos 10 GB libres
+- **Resolución de pantalla**: 1280 x 800 mínimo

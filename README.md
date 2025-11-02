@@ -1,21 +1,22 @@
-# Gesture Recorder - Android Automatización
+````markdown
+# Gesture Recorder - Automatización Android
 
 Aplicación Android en Kotlin que utiliza AccessibilityService para automatizar gestos y acciones en la pantalla.
 
-## Características
+## 🎯 Características
 
 1. **Grabación de Gestos**: Graba las coordenadas y tipo de toque del usuario en la pantalla
 2. **Reproducción de Gestos**: Repite la secuencia de gestos grabada
 3. **Controles Flotantes**: Botones flotantes (overlay) para iniciar/detener la grabación
 4. **Copiar/Pegar Texto**: Copia y pega texto entre aplicaciones usando el servicio de accesibilidad
 
-## Requisitos
+## 📋 Requisitos
 
 - Android 7.0 (API 24) o superior
 - Permiso de accesibilidad
 - Permiso de overlay (ventanas flotantes)
 
-## Instalación
+## 📥 Instalación
 
 1. Compilar el proyecto con Gradle:
 ```bash
@@ -31,7 +32,7 @@ Aplicación Android en Kotlin que utiliza AccessibilityService para automatizar 
 
 4. Conceder permiso de overlay cuando se solicite
 
-## Uso
+## 🎮 Uso
 
 ### Botones Flotantes
 
@@ -48,7 +49,7 @@ Los botones pueden ser movidos arrastrándolos a cualquier posición de la panta
 
 El servicio automáticamente captura texto seleccionado y lo copia al portapapeles. La funcionalidad de pegado está disponible mediante el AccessibilityService.
 
-## Estructura del Proyecto
+## 📁 Estructura del Proyecto
 
 ```
 app/
@@ -68,20 +69,22 @@ app/
 │   └── AndroidManifest.xml              # Manifiesto con permisos y servicios
 ```
 
-## Permisos
+## 🔐 Permisos
 
 La aplicación requiere los siguientes permisos:
 
 - `SYSTEM_ALERT_WINDOW`: Para mostrar botones flotantes sobre otras aplicaciones
 - `BIND_ACCESSIBILITY_SERVICE`: Para acceder a las funciones de accesibilidad
 
-## Notas Técnicas
+## 💡 Notas Técnicas
 
 - La reproducción de gestos requiere Android 7.0 (API 24) o superior
 - Los gestos se graban con coordenadas absolutas en la pantalla
 - El servicio de accesibilidad debe estar activo para todas las funcionalidades
 - La aplicación no requiere root
 
-## Licencia
+## 📄 Licencia
 
 Este proyecto es de código abierto.
+
+````
