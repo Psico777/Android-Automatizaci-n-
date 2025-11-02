@@ -234,8 +234,13 @@ class GestureRecorderService : AccessibilityService() {
         event?.let {
             // Capturar eventos de toque si estamos grabando
             if (isRecording && event.eventType == AccessibilityEvent.TYPE_TOUCH_INTERACTION_START) {
-                // Los eventos de accesibilidad no proporcionan coordenadas exactas,
-                // pero podemos capturar información de la ventana
+                // NOTA: Los eventos de accesibilidad no proporcionan coordenadas exactas.
+                // Para obtener coordenadas precisas, se requeriría:
+                // 1. Un overlay transparente que capture eventos táctiles, O
+                // 2. Usar AccessibilityNodeInfo para obtener bounds de vistas tocadas, O
+                // 3. Implementar un servicio adicional con permisos especiales
+                // El método recordGesture() está disponible para ser llamado desde 
+                // implementaciones externas que sí tengan acceso a las coordenadas.
             }
 
             // Funcionalidad de copiar/pegar texto
@@ -260,7 +265,15 @@ class GestureRecorderService : AccessibilityService() {
     }
 
     /**
-     * Función para pegar texto en un campo editable
+     * Función pública para pegar texto en un campo editable.
+     * Puede ser llamada desde otras partes de la app o mediante reflection/IPC.
+     * 
+     * @param text El texto a pegar en el campo activo
+     * 
+     * Ejemplo de uso desde otra actividad:
+     * val serviceIntent = Intent(this, GestureRecorderService::class.java)
+     * serviceIntent.putExtra("action", "paste_text")
+     * serviceIntent.putExtra("text", "texto a pegar")
      */
     fun pasteText(text: String) {
         val rootNode = rootInActiveWindow ?: return
@@ -307,7 +320,25 @@ class GestureRecorderService : AccessibilityService() {
         }
     }
 
-    // Método para capturar gestos desde fuera del servicio
+    /**
+     * Método público para capturar gestos desde fuera del servicio.
+     * 
+     * Este método está diseñado para ser llamado por componentes externos que
+     * puedan capturar coordenadas exactas de toques (por ejemplo, un overlay
+     * transparente personalizado con OnTouchListener).
+     * 
+     * @param x Coordenada X del toque en píxeles
+     * @param y Coordenada Y del toque en píxeles  
+     * @param action Tipo de acción (MotionEvent.ACTION_DOWN, ACTION_MOVE, ACTION_UP)
+     * 
+     * Ejemplo de uso desde un overlay:
+     * overlayView.setOnTouchListener { _, event ->
+     *     if (service != null) {
+     *         service.recordGesture(event.rawX, event.rawY, event.action)
+     *     }
+     *     false
+     * }
+     */
     fun recordGesture(x: Float, y: Float, action: Int) {
         if (isRecording) {
             val timestamp = System.currentTimeMillis() - recordingStartTime
